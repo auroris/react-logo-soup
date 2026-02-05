@@ -9,7 +9,7 @@ on:
       tags:
         description: 'Tag name to release (e.g. v1.0.0). If left empty on push triggers the pushed tag will be used.'
         required: false
-        default: 'v1.0.0'
+        default: ''
 
 permissions:
   contents: write
@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0               # fetch full history and tags so we can check/create tags and push them
 
       - uses: oven-sh/setup-bun@v2
 
@@ -28,8 +30,39 @@ jobs:
 
       - run: bun run build
 
+      # Determine which tag name to use (input or pushed tag)
+      - name: Determine tag
+        id: determine_tag
+        run: |
+          if [ -n "${{ github.event.inputs.tags }}" ]; then
+            echo "Using workflow input tag: ${{ github.event.inputs.tags }}"
+            echo "TAG=${{ github.event.inputs.tags }}" >> $GITHUB_ENV
+          else
+            # If this run was triggered by a tag push, GITHUB_REF will be refs/tags/<tag>
+            # Strip the refs/tags/ prefix:
+            TAG=${GITHUB_REF#refs/tags/}
+            echo "Using pushed tag: $TAG"
+            echo "TAG=$TAG" >> $GITHUB_ENV
+          fi
+
+      # If a tag was provided by the user but doesn't exist in the repo, create & push it
+      - name: Create tag if missing (for manual dispatch)
+        if: ${{ github.event.inputs.tags != '' }}
+        run: |
+          git fetch --tags
+          if git rev-parse --verify "refs/tags/${{ github.event.inputs.tags }}" >/dev/null 2>&1; then
+            echo "Tag ${{ github.event.inputs.tags }} already exists"
+          else
+            echo "Creating tag ${{ github.event.inputs.tags }}"
+            # Try annotated tag, fallback to lightweight
+            git tag -a "${{ github.event.inputs.tags }}" -m "create tag ${{ github.event.inputs.tags }}" || git tag "${{ github.event.inputs.tags }}"
+            git push origin "refs/tags/${{ github.event.inputs.tags }}"
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/logo-soup.min.js
           generate_release_notes: true
+          tag_name: ${{ env.TAG }}              # explicitly pass the tag
+          token: ${{ secrets.GITHUB_TOKEN }}
