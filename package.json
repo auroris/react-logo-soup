@@ -19,8 +19,10 @@
   ],
   "scripts": {
     "build": "bun build src/global.ts --outfile dist/logo-soup.min.js --target browser --minify && bun build src/index.ts --outdir dist --target browser --format esm --sourcemap=external && bun run build:types",
+    "build:copy": "cpy public/* dist",
     "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
-    "test": "bun test"
+    "test": "bun test",
+    "start": "npx http-server ./dist"
   },
   "repository": {
     "type": "git",
@@ -38,7 +40,10 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@happy-dom/global-registrator": "^16",
-    "@types/bun": "latest"
+    "@happy-dom/global-registrator": "^20.5.0",
+    "@types/bun": "latest",
+    "bun": "^1.3.8",
+    "cpy-cli": "^7.0.0",
+    "typescript": "^5.9.3"
   }
 }
