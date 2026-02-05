@@ -1,7 +1,7 @@
 {
-  "name": "react-logo-soup",
-  "version": "0.1.0",
-  "description": "A tiny React library that makes logos look good together",
+  "name": "logo-soup",
+  "version": "0.2.0",
+  "description": "A tiny library that makes logos look good together",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -18,12 +18,9 @@
     "src"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target browser --format esm --sourcemap=external --external react --external react-dom && bun build src/index.ts --outfile dist/index.cjs --target browser --format cjs --sourcemap=inline --external react --external react-dom && bun run build:types",
+    "build": "bun build src/global.ts --outfile dist/logo-soup.min.js --target browser --minify && bun build src/index.ts --outdir dist --target browser --format esm --sourcemap=external && bun run build:types",
     "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
-    "prepublishOnly": "bun run build",
-    "test": "bun test",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test": "bun test"
   },
   "repository": {
     "type": "git",
@@ -34,35 +31,14 @@
     "url": "https://github.com/sanity-labs/react-logo-soup/issues"
   },
   "keywords": [
-    "react",
     "logo",
     "normalize",
     "layout",
-    "component"
+    "vanilla-js"
   ],
   "license": "MIT",
   "devDependencies": {
-    "@chromatic-com/storybook": "^3",
-    "@storybook/addon-essentials": "^8",
-    "@storybook/addon-interactions": "^8",
-    "@storybook/addon-links": "^8",
-    "@storybook/blocks": "^8",
-    "@storybook/react": "^8",
-    "@storybook/react-vite": "^8",
-    "@storybook/test": "^8",
     "@happy-dom/global-registrator": "^16",
-    "@testing-library/react": "^16",
-    "@types/bun": "latest",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "react": "^18",
-    "react-dom": "^18",
-    "storybook": "^8",
-    "vite": "^5"
-  },
-  "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "typescript": "^5"
+    "@types/bun": "latest"
   }
 }

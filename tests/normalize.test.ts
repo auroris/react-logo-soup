@@ -3,7 +3,7 @@ import {
   normalizeSource,
   calculateNormalizedDimensions,
   createNormalizedLogo,
-} from "../src/normalize";
+} from "../src/utils/normalize";
 import type { MeasurementResult, LogoSource } from "../src/types";
 
 describe("normalizeSource", () => {
