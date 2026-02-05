@@ -20,7 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0               # fetch full history and tags so we can check/create tags and push them
+          fetch-depth: 0            # fetch full history and tags so we can check/create tags and push them
+          persist-credentials: true # allow pushing tags with the provided token
 
       - uses: oven-sh/setup-bun@v2
 
@@ -30,33 +31,37 @@ jobs:
 
       - run: bun run build
 
-      # Determine which tag name to use (input or pushed tag)
       - name: Determine tag
         id: determine_tag
         run: |
           if [ -n "${{ github.event.inputs.tags }}" ]; then
             echo "Using workflow input tag: ${{ github.event.inputs.tags }}"
             echo "TAG=${{ github.event.inputs.tags }}" >> $GITHUB_ENV
-          else
-            # If this run was triggered by a tag push, GITHUB_REF will be refs/tags/<tag>
-            # Strip the refs/tags/ prefix:
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             TAG=${GITHUB_REF#refs/tags/}
             echo "Using pushed tag: $TAG"
             echo "TAG=$TAG" >> $GITHUB_ENV
+          else
+            echo "No tag provided and this is not a tag push. Exiting."
+            exit 1
           fi
 
-      # If a tag was provided by the user but doesn't exist in the repo, create & push it
       - name: Create tag if missing (for manual dispatch)
         if: ${{ github.event.inputs.tags != '' }}
+        env:
+          TAG: ${{ github.event.inputs.tags }}
         run: |
+          # ensure we have tags from origin
           git fetch --tags
-          if git rev-parse --verify "refs/tags/${{ github.event.inputs.tags }}" >/dev/null 2>&1; then
-            echo "Tag ${{ github.event.inputs.tags }} already exists"
+          if git rev-parse --verify "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"
           else
-            echo "Creating tag ${{ github.event.inputs.tags }}"
-            # Try annotated tag, fallback to lightweight
-            git tag -a "${{ github.event.inputs.tags }}" -m "create tag ${{ github.event.inputs.tags }}" || git tag "${{ github.event.inputs.tags }}"
-            git push origin "refs/tags/${{ github.event.inputs.tags }}"
+            echo "Creating annotated tag $TAG at HEAD"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" -m "create tag $TAG" || git tag "$TAG"
+            git push origin "refs/tags/$TAG"
+            echo "Pushed tag $TAG"
           fi
 
       - name: Create Release
@@ -64,5 +69,5 @@ jobs:
         with:
           files: dist/logo-soup.min.js
           generate_release_notes: true
-          tag_name: ${{ env.TAG }}              # explicitly pass the tag
+          tag_name: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
