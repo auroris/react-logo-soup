@@ -1,16 +1,15 @@
-export { LogoSoup } from "./components/LogoSoup";
 export { DEFAULT_ALIGN_BY } from "./constants";
-export { useLogoSoup } from "./hooks/useLogoSoup";
+export { createLogoSoup } from "./createLogoSoup";
+export { processLogos } from "./processLogos";
 export type {
   AlignmentMode,
   BoundingBox,
   ImageRenderProps,
-  LogoSoupProps,
+  LogoSoupOptions,
   LogoSource,
   NormalizedLogo,
+  ProcessLogosOptions,
   RenderImageFn,
-  UseLogoSoupOptions,
-  UseLogoSoupResult,
   VisualCenter,
 } from "./types";
 export { getVisualCenterTransform } from "./utils/getVisualCenterTransform";
