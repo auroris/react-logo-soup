@@ -1,0 +1,90 @@
+<html>
+<head>
+<script src="logo-soup.min.js"></script>
+<script>
+  var logos = [
+    "/logos/aether.svg",
+    "/logos/athena.svg",
+    "/logos/browser-comp.svg",
+    "/logos/burlington.svg",
+    "/logos/carhartt-wip.svg",
+    "/logos/clerk.svg",
+    "/logos/coda.svg",
+    "/logos/commerce-ui.svg",
+    "/logos/conductor.svg",
+    "/logos/cursor.svg",
+    "/logos/customer.io.svg",
+    "/logos/dbt.svg",
+    "/logos/dom-perignon.svg",
+    "/logos/elemeno-health.svg",
+    "/logos/eurostar.svg",
+    "/logos/expedia.svg",
+    "/logos/fanduel.svg",
+    "/logos/fnatic.svg",
+    "/logos/frame.svg",
+    "/logos/frontier.svg",
+    "/logos/gaga.svg",
+    "/logos/gala-games.svg",
+    "/logos/gfinity.svg",
+    "/logos/good-american.svg",
+    "/logos/hinge.svg",
+    "/logos/hipp.svg",
+    "/logos/hunter-douglas.svg",
+    "/logos/kahoot.svg",
+    "/logos/keystone.svg",
+    "/logos/lift-foil.svg",
+    "/logos/loveholidays.svg",
+    "/logos/lvmh.svg",
+    "/logos/mejuri.svg",
+    "/logos/metacore.svg",
+    "/logos/mr-marvis.svg",
+    "/logos/new-day.svg",
+    "/logos/nordstrom.svg",
+    "/logos/nour-hammour.svg",
+    "/logos/paytronix.svg",
+    "/logos/pinecone.svg",
+    "/logos/poc.svg",
+    "/logos/powerhouse.svg",
+    "/logos/primary-bid.svg",
+    "/logos/rad-power-bikes.svg",
+    "/logos/redis.svg",
+    "/logos/reforge.svg",
+    "/logos/render.svg",
+    "/logos/replit.svg",
+    "/logos/retool.svg",
+    "/logos/rich-brilliant-lighting.svg",
+    "/logos/rikstv.svg",
+    "/logos/rona.svg",
+    "/logos/samsung.svg",
+    "/logos/scalapay.svg",
+    "/logos/siemens.svg",
+    "/logos/spanx.svg",
+    "/logos/stereolabs.svg",
+    "/logos/summersalt.svg",
+    "/logos/supreme.svg",
+    "/logos/too-good-to-go.svg",
+    "/logos/tula.svg",
+    "/logos/unity.svg",
+    "/logos/wetransfer.svg"
+    ];
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  LogoSoup.createLogoSoup({
+    logos: shuffle(logos).slice(0, Math.floor(Math.random() * logos.length) + 1),
+  }).then((el) => {
+    document.getElementById("logos").appendChild(el);
+  });
+</script>
+</head>
+<body>
+<div id="logos"></div>
+</body>
+</html>

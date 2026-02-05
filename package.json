@@ -18,7 +18,7 @@
     "src"
   ],
   "scripts": {
-    "build": "bun build src/global.ts --outfile dist/logo-soup.min.js --target browser --minify && bun build src/index.ts --outdir dist --target browser --format esm --sourcemap=external && bun run build:types",
+    "build": "bun build src/global.ts --outfile dist/logo-soup.min.js --target browser --minify && bun build src/index.ts --outdir dist --target browser --format esm --sourcemap=external && bun run build:copy && bun run build:types",
     "build:copy": "cpy public/* dist",
     "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
     "test": "bun test",
