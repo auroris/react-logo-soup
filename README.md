@@ -204,16 +204,7 @@ LogoSoup.createLogoSoup({
 2. **Aspect Ratio Normalization** — Scales logos based on their shape using the `scaleFactor`
 3. **Density Compensation** — Measures pixel density and adjusts size so dense logos don't overpower light ones
 
-All processing happens client-side using canvas. No AI, fully deterministic.
-
-## Releases
-
-Tagged versions automatically build and publish `logo-soup.min.js` to [GitHub Releases](../../releases). To create a release:
-
-```bash
-git tag v0.2.0
-git push origin v0.2.0
-```
+All processing happens client-side using canvas.
 
 ## Development
 
